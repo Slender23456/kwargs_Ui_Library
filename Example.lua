@@ -1,84 +1,75 @@
--- this is an example for the script, use this to make your own! (Might be adding custom Themes)
 local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/7yhx/kwargs_Ui_Library/main/source.lua"))()
 
 local UI = Lib:Create{
-   Theme = "Dark", -- or any other theme
-   Size = UDim2.new(0, 555, 0, 400) -- default
+   Theme = "Dark", -- ou qualquer outro tema
+   Size = UDim2.new(0, 555, 0, 400) -- padrão
 }
 
 local Main = UI:Tab{
    Name = "Main"
 }
 
-local Divider = Main:Divider{
-   Name = "Main shit"
+local AutoFarmDivider = Main:Divider{
+   Name = "Auto Farm"
 }
 
 local QuitDivider = Main:Divider{
    Name = "Quit"
 }
 
--- All functions have the Name, Description and Callback arguments so you can use them whenever ig yeah
-local KillAll = Divider:Button{
-   Name = "Kill all",
-   Description = "Kills all the players in the game!",
-   Callback = function()
-       print("All players killed.")
-   end
+local isAutoCollecting = false
+local isAutoOpening = false
+
+-- Função para coletar estrelas na área Magma Stream
+function collectStars()
+    while isAutoCollecting do
+        -- Código para coletar estrelas na área Magma Stream
+        print("Coletando estrelas na área Magma Stream")
+        wait(2) -- Ajuste o tempo de espera conforme necessário
+    end
+end
+
+-- Função para abrir automaticamente o ovo Devil Egg
+function openDevilEgg()
+    while isAutoOpening do
+        -- Código para abrir o ovo Devil Egg
+        print("Abrindo ovo Devil Egg")
+        wait(5) -- Ajuste o tempo de espera conforme necessário
+    end
+end
+
+-- Função anti-AFK
+function antiAFK()
+    while true do
+        wait(60)
+        local VirtualUser = game:service('VirtualUser')
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end
+end
+
+-- Botão para ativar/desativar a coleta automática de estrelas
+local autoCollectButton = Main:Button{
+    Name = "Ativar/Desativar Coleta Automática de Estrelas",
+    Callback = function()
+        isAutoCollecting = not isAutoCollecting
+        if isAutoCollecting then
+            spawn(collectStars)
+        end
+    end
 }
 
-local LoopKillAll = Divider:Toggle{
-   Name = "Loop kill all",
-   Description = "Loop kills everyone in the game.",
-   Callback = function(State)
-       print("Kill state: ", State)
-   end
+-- Botão para ativar/desativar a abertura automática do ovo Devil Egg
+local autoOpenButton = Main:Button{
+    Name = "Ativar/Desativar Abertura Automática de Devil Egg",
+    Callback = function()
+        isAutoOpening = not isAutoOpening
+        if isAutoOpening then
+            spawn(openDevilEgg)
+        end
+    end
 }
 
-local OtherToggleStyle = Divider:Toggle{
-   Name = "2nd style of toggle",
-   Style = 2
-}
+-- Inicializar anti-AFK
+spawn(antiAFK)
 
-local Players = Divider:Dropdown{
-   Name = "Player list",
-   Options = {"Player1", "Player2", "Player3", "Player4", "Player5"},
-   Callback = function(Value)
-       print(Value)
-   end
-}
-
-Divider:ColorPicker{
-   Name = "ESP color",
-   Default = Color3.fromRGB(0, 255, 255), -- default,
-   Callback = function(Value)
-       print(Value)
-   end
-}
-
-Divider:Box{
-   Name = "Car name",
-   ClearText = true, -- whether the textbox clears on focus or not
-   Callback = function(Value)
-       print(Value)
-   end
-}
-
-Divider:SearchDropdown{
-   Name = "Teleports",
-   Options = {"Pleasant Park", "Loot Lake", "Tomato Town", "Wailing Woods", "Anarchy Acres", "Retail Row"},
-   ClearText = false, -- default
-   Callback = function(Value)
-       print(Value)
-   end
-}
-
-local Quit = QuitDivider:Button{
-   Name = "Closes the ui library.",
-   Callback = function()
-       UI:Quit{
-           Message = "Fuck off...", -- closing message
-           Length = 1 -- seconds the closing message shows for
-       }
-   end
-}
